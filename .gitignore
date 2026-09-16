@@ -3,6 +3,7 @@ dist/
 .data/
 .env
 .env.*
+.idea/
 !.env.example
 coverage/
 test-results/
