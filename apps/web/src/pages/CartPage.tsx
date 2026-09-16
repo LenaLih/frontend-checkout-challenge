@@ -6,8 +6,8 @@ import {
   useRemoveCartItemMutation,
   useSetCartItemMutation,
 } from '../shared/api/cartApi';
-
 import { formatPrice } from '../shared/lib/formatPrice';
+import { pageContainerSx } from '../shared/lib/pageContainerSx.ts';
 
 export const CartPage = () => {
   const { data: cartData, isLoading, error } = useGetCartQuery();
@@ -28,11 +28,11 @@ export const CartPage = () => {
 
   if (!cart || cart.items.length === 0) {
     return (
-      <Container maxWidth="md">
-        <Stack spacing={3}>
+      <Container maxWidth="md" sx={pageContainerSx}>
+        <Stack spacing={3} sx={{ alignItems: 'center' }}>
           <Typography variant="h3">Корзина</Typography>
 
-          <Typography>Корзина пуста</Typography>
+          <Typography color="text.secondary">Корзина пуста</Typography>
 
           <Link to="/">
             <Button variant="outlined">Вернуться в каталог</Button>
@@ -58,70 +58,179 @@ export const CartPage = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <Stack spacing={3}>
-        <Typography variant="h3">Корзина</Typography>
+    <Container maxWidth="lg" sx={pageContainerSx}>
+      <Stack spacing={4}>
+        <Typography variant="h3" sx={{ textAlign: 'center' }}>
+          Корзина
+        </Typography>
 
-        {cart.items.map((item) => (
-          <Card key={item.productId}>
-            <CardContent>
-              <Stack spacing={2}>
-                <Typography variant="h6">{item.title}</Typography>
+        <Stack spacing={3}>
+          {cart.items.map((item) => (
+            <Card
+              key={item.productId}
+              variant="outlined"
+              sx={{
+                borderRadius: 3,
+              }}
+            >
+              <CardContent
+                sx={{
+                  p: {
+                    xs: 2,
+                    md: 3,
+                  },
+                  '&:last-child': {
+                    pb: {
+                      xs: 2,
+                      md: 3,
+                    },
+                  },
+                }}
+              >
+                <Stack spacing={3}>
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      {item.title}
+                    </Typography>
 
-                <Typography>Цена: {formatPrice(item.unitPrice, cart.currency)}</Typography>
+                    <Typography
+                      color="text.secondary"
+                      sx={{
+                        mt: 0.5,
+                      }}
+                    >
+                      Цена: {formatPrice(item.unitPrice, cart.currency)}
+                    </Typography>
+                  </Box>
 
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2,
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    disabled={isUpdating || item.quantity <= 1}
-                    onClick={() => changeQuantity(item.productId, item.quantity - 1)}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 2,
+                      flexWrap: 'wrap',
+                    }}
                   >
-                    −
-                  </Button>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1.5,
+                      }}
+                    >
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        disabled={isUpdating || item.quantity <= 1}
+                        onClick={() => changeQuantity(item.productId, item.quantity - 1)}
+                        sx={{
+                          minWidth: 40,
+                        }}
+                      >
+                        −
+                      </Button>
 
-                  <Typography>{item.quantity}</Typography>
+                      <Typography
+                        sx={{
+                          minWidth: 24,
+                          textAlign: 'center',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {item.quantity}
+                      </Typography>
 
-                  <Button
-                    variant="outlined"
-                    disabled={isUpdating}
-                    onClick={() => changeQuantity(item.productId, item.quantity + 1)}
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        disabled={isUpdating}
+                        onClick={() => changeQuantity(item.productId, item.quantity + 1)}
+                        sx={{
+                          minWidth: 40,
+                        }}
+                      >
+                        +
+                      </Button>
+                    </Box>
+
+                    <Typography
+                      sx={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      Итого: {formatPrice(item.lineTotal, cart.currency)}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 2,
+                      flexWrap: 'wrap',
+                    }}
                   >
-                    +
-                  </Button>
-                </Box>
+                    <Link to="/checkout">
+                      <Button variant="contained" size="small">
+                        Перейти к оформлению
+                      </Button>
+                    </Link>
 
-                <Typography>Итого: {formatPrice(item.lineTotal, cart.currency)}</Typography>
+                    <Button
+                      color="error"
+                      variant="text"
+                      size="small"
+                      disabled={isRemoving}
+                      onClick={() => handleRemove(item.productId)}
+                    >
+                      Удалить
+                    </Button>
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
+          ))}
+        </Stack>
 
-                <Link to="/checkout">
-                  <Button variant="contained">Перейти к оформлению</Button>
+        <Card
+          variant="outlined"
+          sx={{
+            borderRadius: 3,
+          }}
+        >
+          <CardContent>
+            <Stack spacing={2}>
+              <Typography variant="h6">Всего товаров: {cart.quantity}</Typography>
+
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 600,
+                }}
+              >
+                Сумма: {formatPrice(cart.subtotal, cart.currency)}
+              </Typography>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                }}
+              >
+                <Link to="/">
+                  <Button variant="outlined">Продолжить покупки</Button>
                 </Link>
-
-                <Button
-                  color="error"
-                  variant="outlined"
-                  disabled={isRemoving}
-                  onClick={() => handleRemove(item.productId)}
-                >
-                  Удалить
-                </Button>
-              </Stack>
-            </CardContent>
-          </Card>
-        ))}
-
-        <Typography variant="h6">Всего товаров: {cart.quantity}</Typography>
-
-        <Typography variant="h5">Сумма: {formatPrice(cart.subtotal, cart.currency)}</Typography>
-
-        <Link to="/">
-          <Button variant="outlined">Продолжить покупки</Button>
-        </Link>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
       </Stack>
     </Container>
   );

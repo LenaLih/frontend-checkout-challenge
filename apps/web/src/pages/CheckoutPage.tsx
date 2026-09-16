@@ -20,6 +20,7 @@ import { useCreateQuoteMutation, useGetCheckoutOptionsQuery } from '../shared/ap
 import { useCreateOrderMutation } from '../shared/api/orderApi';
 import { useCreatePaymentMutation } from '../shared/api/paymentApi';
 import { formatPrice } from '../shared/lib/formatPrice';
+import { pageContainerSx } from '../shared/lib/pageContainerSx.ts';
 import {
   checkoutDefaultValues,
   checkoutSchema,
@@ -196,7 +197,7 @@ export const CheckoutPage = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg" sx={pageContainerSx}>
       <Stack spacing={4}>
         <Typography variant="h3">Оформление заказа</Typography>
 

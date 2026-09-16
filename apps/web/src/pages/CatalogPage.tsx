@@ -18,6 +18,7 @@ import {
 } from '../shared/api/cartApi';
 
 import { formatPrice } from '../shared/lib/formatPrice';
+import { pageContainerSx } from '../shared/lib/pageContainerSx.ts';
 
 export const CatalogPage = () => {
   const {
@@ -50,17 +51,11 @@ export const CatalogPage = () => {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={ pageContainerSx }>
       <Stack spacing={3}>
-        <Typography variant="h3">
-          Каталог
-        </Typography>
+        <Typography variant="h3">Каталог</Typography>
 
-        <Button
-          component={RouterLink}
-          to="/cart"
-          variant="outlined"
-        >
+        <Button component={RouterLink} to="/cart" variant="outlined">
           Корзина ({cartData?.data.quantity ?? 0})
         </Button>
 
@@ -68,35 +63,20 @@ export const CatalogPage = () => {
           <Card key={product.id}>
             <CardContent>
               <Stack spacing={2}>
-                <Typography variant="h6">
-                  {product.title}
-                </Typography>
+                <Typography variant="h6">{product.title}</Typography>
 
-                <Typography color="text.secondary">
-                  {product.description}
-                </Typography>
+                <Typography color="text.secondary">{product.description}</Typography>
 
-                <Typography>
-                  {formatPrice(
-                    product.price,
-                    product.currency,
-                  )}
-                </Typography>
+                <Typography>{formatPrice(product.price, product.currency)}</Typography>
 
-                <Typography>
-                  Остаток: {product.stock}
-                </Typography>
+                <Typography>Остаток: {product.stock}</Typography>
 
                 <Button
                   variant="contained"
                   disabled={isUpdatingCart}
-                  onClick={() =>
-                    handleAddToCart(product.id)
-                  }
+                  onClick={() => handleAddToCart(product.id)}
                 >
-                  {isUpdatingCart
-                    ? 'Добавляем...'
-                    : 'Добавить в корзину'}
+                  {isUpdatingCart ? 'Добавляем...' : 'Добавить в корзину'}
                 </Button>
               </Stack>
             </CardContent>

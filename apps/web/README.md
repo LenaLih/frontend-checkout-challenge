@@ -1,75 +1,74 @@
-# React + TypeScript + Vite
+# Frontend Checkout Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Клиентская часть checkout-flow для готового backend API.
 
-Currently, two official plugins are available:
+## 🚀 Стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React
+- TypeScript
+- Vite
+- Redux Toolkit
+- RTK Query
+- React Router
+- React Hook Form
+- Zod
+- Material UI
 
-## React Compiler
+## ✅ Что реализовано
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Каталог и корзина
 
-## Expanding the ESLint configuration
+- загрузка каталога товаров;
+- добавление товаров в корзину;
+- изменение количества;
+- удаление товаров;
+- подсчёт общей суммы.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Checkout
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- форма покупателя;
+- валидация через React Hook Form + Zod;
+- выбор способа доставки;
+- самовывоз;
+- курьерская доставка;
+- выбор пункта самовывоза;
+- ввод адреса доставки;
+- выбор способа оплаты;
+- расчёт заказа через quote.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Работа с актуальной корзиной
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Перед созданием quote frontend повторно получает актуальное состояние checkout и использует свежий `cart.version`.
 
-```
+Это позволяет избежать ошибки при изменившейся корзине.
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Создание заказа
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Реализовано:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- создание order;
+- передача customer data;
+- поддержка `card`;
+- поддержка `cash_on_delivery`;
+- idempotency key для создания заказа.
 
-```
+### Оплата
+
+Для оплаты картой создаётся отдельный payment attempt.
+
+Поддерживаются:
+
+- idempotency key;
+- polling статуса оплаты;
+- успешная оплата;
+- отказ банка;
+- остановка polling после финального статуса.
+
+## 💳 Тестовые карты
+
+Для sandbox доступны два сценария.
+
+### Успешная оплата
+
+```text
+•••• 4242
