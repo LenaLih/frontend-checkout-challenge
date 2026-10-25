@@ -1,42 +1,22 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardContent, Container, Stack, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-import {
-  useGetProductsQuery,
-} from '../shared/api/productApi';
+import { useGetProductsQuery } from '../shared/api/productApi';
 
-import {
-  useGetCartQuery,
-  useSetCartItemMutation,
-} from '../shared/api/cartApi';
+import { useGetCartQuery, useSetCartItemMutation } from '../shared/api/cartApi';
 
 import { formatPrice } from '../shared/lib/formatPrice';
 import { pageContainerSx } from '../shared/lib/pageContainerSx.ts';
 
 export const CatalogPage = () => {
-  const {
-    data: productsData,
-    isLoading: isProductsLoading,
-  } = useGetProductsQuery();
+  const { data: productsData, isLoading: isProductsLoading } = useGetProductsQuery();
 
-  const {
-    data: cartData,
-  } = useGetCartQuery();
+  const { data: cartData } = useGetCartQuery();
 
-  const [setCartItem, { isLoading: isUpdatingCart }] =
-    useSetCartItemMutation();
+  const [setCartItem, { isLoading: isUpdatingCart }] = useSetCartItemMutation();
 
   const handleAddToCart = async (productId: string) => {
-    const currentItem = cartData?.data.items.find(
-      (item) => item.productId === productId,
-    );
+    const currentItem = cartData?.data.items.find((item) => item.productId === productId);
 
     const currentQuantity = currentItem?.quantity ?? 0;
 
@@ -51,7 +31,7 @@ export const CatalogPage = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={ pageContainerSx }>
+    <Container maxWidth="lg" sx={pageContainerSx}>
       <Stack spacing={3}>
         <Typography variant="h3">Каталог</Typography>
 
